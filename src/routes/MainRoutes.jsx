@@ -1,0 +1,77 @@
+import { lazy } from 'react';
+
+// project import
+import Loadable from 'components/Loadable';
+import Dashboard from 'layout/Dashboard';
+
+const Color = Loadable(lazy(() => import('pages/component-overview/color')));
+const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
+const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
+const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
+const PokerDetail = Loadable(lazy(() => import('pages/dashboard/PokerDetail')));
+const PokerDetailAI = Loadable(lazy(() => import('pages/dashboard/PokerDetailAI')));
+const PokerHistory = Loadable(lazy(() => import('pages/dashboard/PokerHistory')));
+const PokerAIChart = Loadable(lazy(() => import('pages/dashboard/PokerAIChart')));
+const IndexEdit = Loadable(lazy(() => import('pages/dashboard/IndexEdit')));
+const Self = Loadable(lazy(() => import('pages/dashboard/Self')));
+// render - sample page
+const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
+
+// ==============================|| MAIN ROUTING ||============================== //
+
+const MainRoutes = {
+  path: '/',
+  element: <Dashboard />,
+  children: [
+    {
+      path: '/',
+      element: <DashboardDefault />
+    },
+    {
+      path: 'color',
+      element: <Color />
+    },
+    {
+      path: 'edit',
+      element: <IndexEdit />
+    }, 
+    {
+      path: 'self',
+      element: <Self />
+    },
+    {
+      path: 'default',
+      element: <DashboardDefault />
+    },    
+    {
+      path: 'poker-detail',
+      element: <PokerDetail />
+    },
+    {
+      path: 'poker-detail-ai',
+      element: <PokerDetailAI />
+    },
+    {
+      path: 'poker-history',
+      element: <PokerHistory/>
+    },
+    {
+      path: 'poker-ai-chart',
+      element: <PokerAIChart/>
+    },
+    {
+      path: 'sample-page',
+      element: <SamplePage />
+    },
+    {
+      path: 'shadow',
+      element: <Shadow />
+    },
+    {
+      path: 'typography',
+      element: <Typography />
+    }
+  ]
+};
+
+export default MainRoutes;
