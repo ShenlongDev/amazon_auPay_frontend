@@ -8,8 +8,7 @@ const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
-const Order = Loadable(lazy(() => import('pages/dashboard/Order')));
-const Result = Loadable(lazy(() => import('pages/dashboard/Result')));
+
 const PokerDetail = Loadable(lazy(() => import('pages/dashboard/PokerDetail')));
 const PokerDetailAI = Loadable(lazy(() => import('pages/dashboard/PokerDetailAI')));
 const PokerHistory = Loadable(lazy(() => import('pages/dashboard/PokerHistory')));
@@ -20,6 +19,10 @@ const Self = Loadable(lazy(() => import('pages/dashboard/Self')));
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
+const Order = Loadable(lazy(() => import('pages/dashboard/Order')));
+const DeliveryMsgHistory = Loadable(lazy(() => import('pages/dashboard/DeliveryMsgHistory')));
+const Result = Loadable(lazy(() => import('pages/dashboard/Result')));
+const ItemList = Loadable(lazy(() => import('pages/dashboard/ItemList')));
 
 const MainRoutes = {
   path: '/',
@@ -32,6 +35,14 @@ const MainRoutes = {
     {
       path: '/order',
       element: <Order />
+    },
+    {
+      path: '/delivery_msg_history',
+      element: <DeliveryMsgHistory />
+    },
+    {
+      path: '/item_list',
+      element: <ItemList />
     },
     {
       path: 'result',
