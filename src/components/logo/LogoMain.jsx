@@ -54,7 +54,7 @@ export default function LogoMain() {
           </linearGradient>
         </defs>
       </svg>
-      <p style={LogoStyle}>Poker AI</p>
+      <p style={LogoStyle}>BEYOND</p>
     </>
   );
 }

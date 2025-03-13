@@ -1,72 +1,43 @@
 // assets
-import { DashboardOutlined, HistoryOutlined, TrophyOutlined,HighlightOutlined, RadarChartOutlined, UsergroupAddOutlined, AppstoreAddOutlined } from '@ant-design/icons';
-
-// icons
-const icons = {
-  DashboardOutlined, HistoryOutlined, TrophyOutlined, HighlightOutlined, RadarChartOutlined, UsergroupAddOutlined, AppstoreAddOutlined
-};
+import { OrderedListOutlined, AlertOutlined, AccountBookOutlined, CalculatorOutlined, DashboardOutlined, HistoryOutlined, TrophyOutlined, HighlightOutlined, RadarChartOutlined, UsergroupAddOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
 const dashboard = {
   id: 'group-dashboard',
-  title: '試合管理',
+  title: '財務管理',
   type: 'group',
   children: [
     {
-      id: 'dashboard',
-      title: '新規作成',
+      id: 'order',
+      title: '注文処理',
       type: 'item',
-      url: 'default',
-      icon: icons.AppstoreAddOutlined,
+      url: '/order',
+      icon: OrderedListOutlined,
       breadcrumbs: false
     },
     // {
-    //   id: 'self',
-    //   title: '自分の試合',
+    //   id: 'dashboard2',
+    //   title: '発送通知',
     //   type: 'item',
-    //   url: 'self',
-    //   icon: icons.DashboardOutlined,
+    //   url: '/poker-detail-ai',
+    //   icon: AlertOutlined,
     //   breadcrumbs: false
     // },
     // {
-    //   id: 'poker-detail',
-    //   title: '試合詳細',
+    //   id: 'dashboard3',
+    //   title: '発送通知履歴',
     //   type: 'item',
-    //   url: 'poker-detail',
-    //   icon: icons.TrophyOutlined,
-    //   breadcrumbs: false
-    // },
-    // {
-    //   id: 'user-detail',
-    //   title: 'Player管理',
-    //   type: 'item',
-    //   url: 'poker-detail',
-    //   icon: icons.UsergroupAddOutlined,
+    //   url: '/poker-history',
+    //   icon: HistoryOutlined,
     //   breadcrumbs: false
     // },
     {
-      id: 'dashboard2',
-      title: '試合詳細AI',
+      id: 'result',
+      title: '収益管理',
       type: 'item',
-      url: '/poker-detail-ai',
-      icon: icons.TrophyOutlined,
-      breadcrumbs: false
-    },
-    {
-      id: 'dashboard3',
-      title: '履歴分析',
-      type: 'item',
-      url: '/poker-history',
-      icon: icons.HistoryOutlined,
-      breadcrumbs: false
-    },
-    {
-      id: 'dashboard4',
-      title: '詳細分析',
-      type: 'item',
-      url: '/poker-ai-chart',
-      icon: icons.RadarChartOutlined,
+      url: '/result',
+      icon: CalculatorOutlined,
       breadcrumbs: false
     }
   ]

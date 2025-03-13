@@ -8,6 +8,8 @@ const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
+const Order = Loadable(lazy(() => import('pages/dashboard/Order')));
+const Result = Loadable(lazy(() => import('pages/dashboard/Result')));
 const PokerDetail = Loadable(lazy(() => import('pages/dashboard/PokerDetail')));
 const PokerDetailAI = Loadable(lazy(() => import('pages/dashboard/PokerDetailAI')));
 const PokerHistory = Loadable(lazy(() => import('pages/dashboard/PokerHistory')));
@@ -25,11 +27,15 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
+      element: <Order />
     },
     {
-      path: 'color',
-      element: <Color />
+      path: '/order',
+      element: <Order />
+    },
+    {
+      path: 'result',
+      element: <Result />
     },
     {
       path: 'edit',

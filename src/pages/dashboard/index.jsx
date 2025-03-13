@@ -146,8 +146,8 @@ export default function DashboardDefault() {
         .catch((error) => {
 
           if (error.status == 401 || error.status == 422) {
-            alert("ログインをお願いします。");
-            window.location.href = "./login";
+            // alert("ログインをお願いします。");
+            // window.location.href = "./login";
           }
         });
     }
@@ -223,8 +223,8 @@ export default function DashboardDefault() {
         .catch((error) => {
 
           if (error.status == 401 || error.status == 422) {
-            alert("ログインをお願いします。");
-            window.location.href = "./login";
+            // alert("ログインをお願いします。");
+            // window.location.href = "./login";
           }
         });
     }
@@ -258,8 +258,8 @@ export default function DashboardDefault() {
       .catch((error) => {
 
         if (error.status == 401 || error.status == 422) {
-          alert("ログインをお願いします。");
-          window.location.href = "login";
+          // alert("ログインをお願いします。");
+          // window.location.href = "login";
         }
       });
 
@@ -279,8 +279,8 @@ export default function DashboardDefault() {
       .catch((error) => {
 
         if (error.status == 401 || error.status == 422) {
-          alert("ログインをお願いします。");
-          window.location.href = "login";
+          // alert("ログインをお願いします。");
+          // window.location.href = "login";
         }
       });
 
@@ -288,8 +288,8 @@ export default function DashboardDefault() {
 
   useEffect(() => {
     if (!localStorage.getItem("access_token")) {
-      alert("ログインをお願いします。");
-      window.location.href = "login";
+      // alert("ログインをお願いします。");
+      // window.location.href = "login";
     }
     getInitData();
   }, []);

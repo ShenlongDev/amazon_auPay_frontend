@@ -2,49 +2,67 @@
 import {
   AppstoreAddOutlined,
   AntDesignOutlined,
+  AccountBookOutlined,
   BarcodeOutlined,
   BgColorsOutlined,
+  UsergroupDeleteOutlined,
+  TranslationOutlined,
+  FileGifOutlined,
+  UserOutlined,
   FontSizeOutlined,
   LoadingOutlined
 } from '@ant-design/icons';
 
-// icons
-const icons = {
-  FontSizeOutlined,
-  BgColorsOutlined,
-  BarcodeOutlined,
-  AntDesignOutlined,
-  LoadingOutlined,
-  AppstoreAddOutlined
-};
 
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
 
 const utilities = {
   id: 'utilities',
-  title: 'Utilities',
+  title: '設定管理',
   type: 'group',
   children: [
     {
       id: 'util-typography',
-      title: 'Typography',
+      title: '価格設定',
       type: 'item',
       url: '/typography',
-      icon: icons.FontSizeOutlined
+      icon: AccountBookOutlined
     },
     {
       id: 'util-color',
-      title: 'Color',
+      title: '除外ワード設定',
       type: 'item',
       url: '/color',
-      icon: icons.BgColorsOutlined
+      icon: BgColorsOutlined
     },
     {
       id: 'util-shadow',
-      title: 'Shadow',
+      title: 'ホワイトASIN設定',
+      type: 'item',
+      url: '/TranslationOutlined',
+      icon: TranslationOutlined
+    }
+    ,
+    {
+      id: 'util-shadow',
+      title: 'ブラック購入者設定',
       type: 'item',
       url: '/shadow',
-      icon: icons.BarcodeOutlined
+      icon: UsergroupDeleteOutlined
+    },
+    {
+      id: 'util-shadow',
+      title: '装飾画像設定',
+      type: 'item',
+      url: '/shadow',
+      icon: FileGifOutlined
+    } ,
+    {
+      id: 'util-shadow',
+      title: 'アカウント設定',
+      type: 'item',
+      url: '/shadow',
+      icon: UserOutlined
     }
   ]
 };
