@@ -21,7 +21,7 @@ const pages = {
       id: 'login1',
       title: '商品登録',
       type: 'item',
-      url: '/login',
+      url: '/item_edit',
       icon: AppstoreAddOutlined,
       breadcrumbs: false
     },
@@ -32,7 +32,7 @@ const pages = {
       type: 'item',
       url: '/login',
       icon: FileSearchOutlined,
-      target: true
+      breadcrumbs: false
     },
     {
       id: 'login1',
@@ -40,7 +40,7 @@ const pages = {
       type: 'item',
       url: '/login',
       icon: FontColorsOutlined,
-      target: true
+      breadcrumbs: false
     },
     
     // {
