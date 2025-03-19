@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import axios from 'axios';
-import { CheckOutlined , KeyOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
+import { CheckOutlined, KeyOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 // project import
 import MainCard from 'components/MainCard';
 // assets
@@ -27,7 +27,13 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { CheckBox } from '@mui/icons-material';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { width } from '@mui/system';
 
 const style = {
   position: 'absolute',
@@ -102,7 +108,7 @@ export default function DashboardDefault() {
         <Grid item xs={12} md={12} lg={12} >
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5">商品登録 / 商品一覧</Typography>
+              <Typography variant="h5">商品管理 / 商品一覧</Typography>
               <Typography variant="caption" color="secondary" noWrap>
                 商品一覧を表示します。
               </Typography>
@@ -131,28 +137,48 @@ export default function DashboardDefault() {
               </Button> */}
               </Grid>
             </Grid>
+            <Grid container justifyContent="space-between" >
+              <Grid item>
+                <TextField
+                  label="ASIN, ロットナンバー, 商品コード"
+                  id="outlined-start-adornment"
+                  sx={{ width: 500, minWidth: 300 }}
+                  slotProps={{
+                    input: {
+                      startAdornment: <InputAdornment position="start"><KeyOutlined /></InputAdornment>,
+                    },
+                  }}
+                />
+                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
+                  検索
+                </Button>
+              </Grid>
+              <Grid item alignContent={'center'}>
+                <FormControl sx={{ width: 100 }}>
+                  <InputLabel id="demo-simple-select-label">表示件数</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={age}
+                    label="Age"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={10}>50</MenuItem>
+                    <MenuItem value={20}>100</MenuItem>
+                    <MenuItem value={30}>250</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
             <Accordion sx={{ marginTop: 1 }}>
+
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1-content"
                 id="panel1-header"
               >
                 <Grid container justifyContent="space-between" >
-                  <Grid item>
-                    <TextField
-                      label="ASIN, ロットナンバー, 商品コード"
-                      id="outlined-start-adornment"
-                      sx={{ width: 500, minWidth: 300 }}
-                      slotProps={{
-                        input: {
-                          startAdornment: <InputAdornment position="start"><KeyOutlined /></InputAdornment>,
-                        },
-                      }}
-                    />
-                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
-                      検索
-                    </Button>
-                  </Grid>
+
                   <Grid item alignContent={'center'}>
                     <Typography variant="h7"> <PlusOutlined /> 検索条件 </Typography>
                   </Grid>
@@ -160,7 +186,200 @@ export default function DashboardDefault() {
 
               </AccordionSummary>
               <AccordionDetails>
-                sdf
+                <Grid container justifyContent="space-between" >
+                  <Grid item>
+                    <Typography variant="h7" sx={{ marginRight: '25px' }}> キーワード検索</Typography>
+                    <FormControlLabel control={<Checkbox defaultChecked />} label="ASIN" />
+                    <FormControlLabel required control={<Checkbox />} label="ロットナンバー" />
+                    <FormControlLabel required control={<Checkbox />} label="商品コード" />
+                    <FormControlLabel required control={<Checkbox />} label="商品名" />
+                    <FormControlLabel required control={<Checkbox />} label="ブランド" />
+                    <FormControlLabel required control={<Checkbox />} label="カテゴリ" />
+                    <FormControlLabel required control={<Checkbox />} label="商品説明" />
+                  </Grid>
+                </Grid>
+                <Grid container justifyContent="space-between" mt={3}>
+                  <Grid item>
+                    <Grid container gap={1} alignItems={'center'}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '60px' }}> 価格</Typography>
+                      <TextField
+                        label="最低価格"
+                        id="outlined-start-adornment"
+                        sx={{ width: '200px' }}
+                        slotProps={{
+                          input: {
+                            startAdornment: <InputAdornment position="end">円以上</InputAdornment>,
+                            type: "number",
+                          },
+                        }}
+                      />
+                      <Typography variant="h7">〜</Typography>
+                      <TextField
+                        label="最高価格"
+                        id="outlined-start-adornment"
+                        sx={{ width: '200px' }}
+                        slotProps={{
+                          input: {
+                            startAdornment: <InputAdornment position="end">円以下</InputAdornment>,
+                            type: "number",
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'} mt={2}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '60px' }}> 在庫無し</Typography>
+                      <TextField
+                        label="日間"
+                        id="outlined-start-adornment"
+                        sx={{ width: '200px' }}
+                        slotProps={{
+                          input: {
+                            startAdornment: <InputAdornment position="end">日以上</InputAdornment>,
+                            type: "number",
+                          },
+                        }}
+                      />
+                      <Typography variant="h7">状態は在庫無しのみ</Typography>
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'} mt={2}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '60px' }}> 状態</Typography>
+                      <FormControl sx={{ width: '200px' }}>
+                        <InputLabel id="demo-simple-select-label">状態</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={age}
+                          label="Age"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={10}>-</MenuItem>
+                          <MenuItem value={20}>出品済み</MenuItem>
+                          <MenuItem value={30}>受注処理中</MenuItem>
+                          <MenuItem value={30}>Wowma 登録エラー</MenuItem>
+                          <MenuItem value={30}>在庫無し</MenuItem>
+                          <MenuItem value={30}>NG ASIN</MenuItem>
+                          <MenuItem value={30}>NG ワード</MenuItem>
+                          <MenuItem value={30}>NG ブランド</MenuItem>
+                          <MenuItem value={30}>NG カテゴリ</MenuItem>
+                          <MenuItem value={30}>エラー</MenuItem>
+                          <MenuItem value={30}>画像無し</MenuItem>
+                          <MenuItem value={30}>画像取得失敗</MenuItem>
+                          <MenuItem value={30}>カテゴリ変換失敗</MenuItem>
+                          <MenuItem value={30}>NG 全て</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'} mt={2}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '60px' }}> その他</Typography>
+                      <Grid item>
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Wowma未登録のみ" />
+                        <FormControlLabel required control={<Checkbox />} label="再登録ロック中のみ" />
+                        <FormControlLabel required control={<Checkbox />} label="個別価格設定中のみ" />
+                        <FormControlLabel required control={<Checkbox />} label="ホワイトASINのみ" />
+                      </Grid>
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'} mt={2}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '60px' }}> 表示順序</Typography>
+                      <FormControl sx={{ width: '200px' }}>
+                        <InputLabel id="demo-simple-select-label">表示順序</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={age}
+                          label="Age"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={10}>-</MenuItem>
+                          <MenuItem value={20}>登録日が新しい順</MenuItem>
+                          <MenuItem value={30}>登録日が古い順</MenuItem>
+                          <MenuItem value={30}>価格が高い順</MenuItem>
+                          <MenuItem value={30}>価格が安い順</MenuItem>
+                          <MenuItem value={30}>最終販売日が新しい順</MenuItem>
+                          <MenuItem value={30}>最終販売日が古い順</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <Typography variant="h7">〜</Typography>
+                      <FormControl sx={{ width: '200px' }}>
+                        <InputLabel id="demo-simple-select-label">表示順序</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={age}
+                          label="Age"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={10}>-</MenuItem>
+                          <MenuItem value={20}>登録日が新しい順</MenuItem>
+                          <MenuItem value={30}>登録日が古い順</MenuItem>
+                          <MenuItem value={30}>価格が高い順</MenuItem>
+                          <MenuItem value={30}>価格が安い順</MenuItem>
+                          <MenuItem value={30}>最終販売日が新しい順</MenuItem>
+                          <MenuItem value={30}>最終販売日が古い順</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Grid container gap={1} alignItems={'center'}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '70px' }}> 登録日</Typography>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DatePicker', 'DatePicker']}>
+                          <DatePicker sx={{ width: '50px' }} label="月選択" defaultValue={dayjs('2022-04-17')} views={['year', 'month']} />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                      <Typography variant="h7">〜</Typography>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DatePicker', 'DatePicker']}>
+                          <DatePicker sx={{ width: '50px' }} label="月選択" defaultValue={dayjs('2022-04-17')} views={['year', 'month']} />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'} mt={2}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '70px' }}> 販売個数</Typography>
+                      <TextField
+                        label="最低価格"
+                        id="outlined-start-adornment"
+                        sx={{ width: '200px' }}
+                        slotProps={{
+                          input: {
+                            startAdornment: <InputAdornment position="end">個以上</InputAdornment>,
+                            type: "number",
+                          },
+                        }}
+                      />
+                      <Typography variant="h7">〜</Typography>
+                      <TextField
+                        label="最高価格"
+                        id="outlined-start-adornment"
+                        sx={{ width: '200px' }}
+                        slotProps={{
+                          input: {
+                            startAdornment: <InputAdornment position="end">個以下</InputAdornment>,
+                            type: "number",
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'} mt={1}>
+                      <Typography variant="h7" sx={{ marginRight: '25px', width: '70px' }}> 最終販売日</Typography>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DatePicker', 'DatePicker']}>
+                          <DatePicker sx={{ width: '50px' }} label="月選択" defaultValue={dayjs('2022-04-17')} views={['year', 'month']} />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                      <Typography variant="h7">〜</Typography>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DatePicker', 'DatePicker']}>
+                          <DatePicker sx={{ width: '50px' }} label="月選択" defaultValue={dayjs('2022-04-17')} views={['year', 'month']} />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                    </Grid>
+                  </Grid>
+
+                </Grid>
+                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
+                  <KeyOutlined />&nbsp;&nbsp;検索
+                </Button>
               </AccordionDetails>
             </Accordion>
             <Grid container justifyContent="space-between">
@@ -189,28 +408,13 @@ export default function DashboardDefault() {
                             </FormControl>
                           </Grid>
                           <Grid item width={150}>
-                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', height:'41px' }}>
+                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', height: '41px' }}>
                               <CheckOutlined />&nbsp;&nbsp;確認
                             </Button>
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item alignContent={'center'}>
-                        <FormControl sx={{ width: 100 }}>
-                          <InputLabel id="demo-simple-select-label">表示件数</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={age}
-                            label="Age"
-                            onChange={handleChange}
-                          >
-                            <MenuItem value={10}>50</MenuItem>
-                            <MenuItem value={20}>100</MenuItem>
-                            <MenuItem value={30}>250</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
+
                     </Grid>
 
                     <Table aria-labelledby="tableTitle">

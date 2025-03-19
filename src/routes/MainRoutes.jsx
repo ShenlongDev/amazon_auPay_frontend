@@ -24,6 +24,8 @@ const DeliveryMsgHistory = Loadable(lazy(() => import('pages/dashboard/DeliveryM
 const Result = Loadable(lazy(() => import('pages/dashboard/Result')));
 const ItemList = Loadable(lazy(() => import('pages/dashboard/ItemList')));
 const ItemEdit = Loadable(lazy(() => import('pages/dashboard/ItemEdit')));
+const ItemToView = Loadable(lazy(() => import('pages/dashboard/ItemToView')));
+const ItemAsinDel = Loadable(lazy(() => import('pages/dashboard/ItemAsinDel')));
 
 const MainRoutes = {
   path: '/',
@@ -49,6 +51,14 @@ const MainRoutes = {
     {
       path: '/item_edit',
       element: <ItemEdit />
+    },
+    {
+      path: '/item_to_view',
+      element: <ItemToView />
+    },
+    {
+      path: '/item_asin_del',
+      element: <ItemAsinDel />
     },
     {
       path: 'result',

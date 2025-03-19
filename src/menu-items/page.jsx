@@ -28,17 +28,17 @@ const pages = {
     
     {
       id: 'login1',
-      title: '商品コードで一覧表示',
+      title: 'IDで一覧表示',
       type: 'item',
-      url: '/login',
+      url: '/item_to_view',
       icon: FileSearchOutlined,
       breadcrumbs: false
     },
     {
       id: 'login1',
-      title: 'ASINで商品一括削除',
+      title: 'ASINで削除',
       type: 'item',
-      url: '/login',
+      url: '/item_asin_del',
       icon: FontColorsOutlined,
       breadcrumbs: false
     },
