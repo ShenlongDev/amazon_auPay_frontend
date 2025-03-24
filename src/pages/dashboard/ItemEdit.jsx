@@ -37,7 +37,7 @@ export default function DashboardDefault() {
             <Grid item>
               <Typography variant="h5">商品管理 / 商品登録</Typography>
               <Typography variant="caption" color="secondary" noWrap>
-                商品登録を表示します。
+                商品を登録します。
               </Typography>
             </Grid>
 

@@ -15,7 +15,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
-import { minWidth } from '@mui/system';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
@@ -75,7 +74,7 @@ export default function DashboardDefault() {
                   </DemoContainer>
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12} md={5} lg={5} sx={{textAlign: 'right'}} pt={1}>
+              <Grid item xs={12} md={5} lg={5} sx={{ textAlign: 'right' }} pt={1}>
                 <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a' }} onClick={() => handleOpen()}  >
                   <CheckOutlined />&nbsp;&nbsp;確認
                 </Button>
@@ -158,6 +157,20 @@ export default function DashboardDefault() {
                       </Grid>
                       <Grid item xs={12} md={9} lg={9} sx={{ display: 'flex' }}>
                         Wow! manager で受注メール作成 ( 9 )
+                      </Grid>
+                    </Grid>
+                    <Grid item sx={{ display: 'flex', gap: 1, width: '100%' }} >
+                      <Grid item xs={12} md={3} lg={3}>
+                        発送待ち
+                      </Grid>
+                      <Grid item xs={12} md={3} lg={3} sx={{ display: 'flex' }}>
+                        宅配便 ( 0 )
+                      </Grid>
+                      <Grid item xs={12} md={3} lg={3} sx={{ display: 'flex' }}>
+                        メール便 ( 0 )
+                      </Grid>
+                      <Grid item xs={12} md={3} lg={3} sx={{ display: 'flex' }}>
+                        全て ( 0 )
                       </Grid>
                     </Grid>
                     <Grid item sx={{ display: 'flex', gap: 1, width: '100%' }} >

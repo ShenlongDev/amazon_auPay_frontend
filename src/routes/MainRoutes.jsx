@@ -21,11 +21,18 @@ const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')))
 // ==============================|| MAIN ROUTING ||============================== //
 const Order = Loadable(lazy(() => import('pages/dashboard/Order')));
 const DeliveryMsgHistory = Loadable(lazy(() => import('pages/dashboard/DeliveryMsgHistory')));
-const Result = Loadable(lazy(() => import('pages/dashboard/Result')));
+const Profit = Loadable(lazy(() => import('pages/dashboard/Profit')));
 const ItemList = Loadable(lazy(() => import('pages/dashboard/ItemList')));
 const ItemEdit = Loadable(lazy(() => import('pages/dashboard/ItemEdit')));
 const ItemToView = Loadable(lazy(() => import('pages/dashboard/ItemToView')));
 const ItemAsinDel = Loadable(lazy(() => import('pages/dashboard/ItemAsinDel')));
+const PriceEdit = Loadable(lazy(() => import('pages/dashboard/PriceEdit')));
+const ExcludeWords = Loadable(lazy(() => import('pages/dashboard/ExcludeWords')));
+const WhiteASINSet = Loadable(lazy(() => import('pages/dashboard/WhiteASINSet')));
+const BlackBuyerSet = Loadable(lazy(() => import('pages/dashboard/BlackBuyerSet')));
+const ImgSet = Loadable(lazy(() => import('pages/dashboard/ImgSet')));
+const Account = Loadable(lazy(() => import('pages/dashboard/Account')));
+const ResetPassword = Loadable(lazy(() => import('pages/dashboard/ResetPassword')));
 
 const MainRoutes = {
   path: '/',
@@ -61,13 +68,45 @@ const MainRoutes = {
       element: <ItemAsinDel />
     },
     {
-      path: 'result',
-      element: <Result />
+      path: 'profit',
+      element: <Profit />
     },
+    {
+      path: 'price_edit',
+      element: <PriceEdit />
+    },
+    {
+      path: 'exclude_words',
+      element: <ExcludeWords />
+    },
+    {
+      path: 'white_asin_set',
+      element: <WhiteASINSet />
+    },
+    {
+      path: 'black_buyer_set',
+      element: <BlackBuyerSet />
+    },
+    {
+      path: 'img_set',
+      element: <ImgSet />
+    },
+    {
+      path: 'account',
+      element: <Account />
+    },
+    {
+      path: 'reset_password',
+      element: <ResetPassword />
+    },
+
+
     {
       path: 'edit',
       element: <IndexEdit />
     }, 
+
+
     {
       path: 'self',
       element: <Self />

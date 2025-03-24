@@ -33,10 +33,10 @@ const dashboard = {
     //   breadcrumbs: false
     // },
     {
-      id: 'result',
-      title: '収益管理',
+      id: 'profit',
+      title: '損益管理',
       type: 'item',
-      url: '/result',
+      url: '/profit',
       icon: CalculatorOutlined,
       breadcrumbs: false
     }

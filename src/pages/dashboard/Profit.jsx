@@ -91,9 +91,9 @@ export default function DashboardDefault() {
         <Grid item xs={12} md={12} lg={12} >
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5">財務管理 / 収益管理</Typography>
+              <Typography variant="h5">財務管理 / 損益管理</Typography>
               <Typography variant="caption" color="secondary" noWrap>
-                注文処理状況を表示します。
+                損益状況を表示します。
               </Typography>
             </Grid>
 
@@ -132,21 +132,56 @@ export default function DashboardDefault() {
                     <Table aria-labelledby="tableTitle">
                       <TableHead>
                         <TableRow>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>受注番号</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>注文日時</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>ASIN</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>商品名</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>Amazon</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>価格</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>販売価格</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>手数料</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>個数</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>利益</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>利率</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">受注番号</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">注文日時</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">ASIN</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">商品名</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">Amazon価格</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">販売価格</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">手数料</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">個数</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">利益</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">利率</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          tabIndex={-1}
+                        >
+                          <TableCell component="th" id='' scope="row">
+                            721963414
+                          </TableCell>
+                          <TableCell>
+                            2025-03-01 00:04:00
+                          </TableCell>
+                          <TableCell>
+                            B0CNQW4KBB
+                          </TableCell>
+                          <TableCell>
+                            CIO マグネットケーブル専用取換端子 USB Type-C Micro-USB 磁石で脱着 防水規格 IPX5対応 iphone15 タイプC 交換用 端子 (USB Type-C,
+                          </TableCell>
+                          <TableCell>
+                            1100
+                          </TableCell>
+                          <TableCell align="right">
+                            1320
+                          </TableCell>
+                          <TableCell align="right">
+                            132
+                          </TableCell>
+                          <TableCell align="right">
+                            1
+                          </TableCell>
+                          <TableCell align="right">
+                            88
+                          </TableCell>
+                          <TableCell align="right">
+                            6.67%
+                          </TableCell>
+                        </TableRow>
                       </TableBody>
                     </Table>
 

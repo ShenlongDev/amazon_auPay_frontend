@@ -37,7 +37,7 @@ export default function DashboardDefault() {
             <Grid item>
               <Typography variant="h5">商品管理 / ASINで商品一括削除</Typography>
               <Typography variant="caption" color="secondary" noWrap>
-                ASINを入力してください。
+                ASINを入力してください。<br></br>
                 複数入力する場合は改行かスペース区切りで入力してください。100000件まで入力できます。
               </Typography>
             </Grid>

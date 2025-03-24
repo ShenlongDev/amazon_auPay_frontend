@@ -96,19 +96,19 @@ export default function Profile() {
   const [min_exploration_rate, setMinExplorationRate] = useState(10)
 
   useEffect(() => {
-    if(localStorage.getItem("ai1")){
+    if (localStorage.getItem("ai1")) {
       setLearningRate(localStorage.getItem("ai1"))
     }
-    if(localStorage.getItem("ai2")){
+    if (localStorage.getItem("ai2")) {
       setDiscountFactor(localStorage.getItem("ai2"))
     }
-    if(localStorage.getItem("ai3")){
+    if (localStorage.getItem("ai3")) {
       setExplorationRate(localStorage.getItem("ai3"))
     }
-    if(localStorage.getItem("ai4")){
+    if (localStorage.getItem("ai4")) {
       setExplorationDecay(localStorage.getItem("ai4"))
     }
-    if(localStorage.getItem("ai5")){
+    if (localStorage.getItem("ai5")) {
       setMinExplorationRate(localStorage.getItem("ai5"))
     }
   }, []);
@@ -130,9 +130,8 @@ export default function Profile() {
         onClick={handleToggle}
       >
         <Stack direction="row" spacing={1.25} alignItems="center" sx={{ p: 0.5 }}>
-          <Avatar alt="profile user" src={avatar1} size="sm" />
           <Typography variant="subtitle1" sx={{ textTransform: 'capitalize' }}>
-            John Doe
+            マイページ
           </Typography>
         </Stack>
       </ButtonBase>
@@ -159,99 +158,7 @@ export default function Profile() {
             <Paper sx={{ boxShadow: theme.customShadows.z1, width: 290, minWidth: 240, maxWidth: { xs: 250, md: 290 } }}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard elevation={0} border={false} content={false}>
-                  <CardContent sx={{ px: 2.5, pt: 3 }}>
-                    <Grid container justifyContent="space-between" alignItems="center">
-                      <Grid item>
-                        <Stack direction="row" spacing={1.25} alignItems="center">
-                          <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-                          <Stack>
-                            <Typography variant="h6">John Doe</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              UI/UX Designer
-                            </Typography>
-                          </Stack>
-                        </Stack>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
 
-                  <TabPanel value={value} index={0} dir={theme.direction}>
-                    <Grid marginLeft={3} mt={5}>
-                      {/* <Typography color="secondary">
-            AI設定*
-          </Typography> */}
-                      <Typography variant="caption" color="secondary" noWrap>
-                        学習率*
-                      </Typography>
-                      <Box sx={{ width: 200 }}>
-                        <Slider
-                          aria-label="Always visible"
-                          value={learning_rate}
-                          getAriaValueText={valuetext}
-                          step={10}
-                          marks={marks}
-                          valueLabelDisplay="on"
-                          onChange={(e) => { setLearningRate(e.target.value), setvale(1, e.target.value) }}
-                        />
-                      </Box>
-                      <Typography variant="caption" color="secondary" noWrap>
-                        割引率*
-                      </Typography>
-                      <Box sx={{ width: 200 }}>
-                        <Slider
-                          aria-label="Always visible"
-                          value={discount_factor}
-                          getAriaValueText={valuetext}
-                          step={5}
-                          marks={marks}
-                          valueLabelDisplay="on"
-                          onChange={(e) => { setDiscountFactor(e.target.value), setvale(2, e.target.value) }}
-                        />
-                      </Box>
-                      <Typography variant="caption" color="secondary" noWrap>
-                        探査率*
-                      </Typography>
-                      <Box sx={{ width: 200 }}>
-                        <Slider
-                          aria-label="Always visible"
-                          value={exploration_rate}
-                          getAriaValueText={valuetext}
-                          step={5}
-                          marks={marks}
-                          onChange={(e) => { setExplorationRate(e.target.value), setvale(3, e.target.value) }}
-                          valueLabelDisplay="on"
-                        />
-                      </Box>
-                      <Typography variant="caption" color="secondary" noWrap>
-                        探査率減少*
-                      </Typography>
-                      <Box sx={{ width: 200 }}>
-                        <Slider
-                          aria-label="Always visible"
-                          value={exploration_decay}
-                          getAriaValueText={valuetext}
-                          step={5}
-                          marks={marks}
-                          onChange={(e) => { setExplorationDecay(e.target.value), setvale(4, e.target.value) }}
-                          valueLabelDisplay="on"
-                        />
-                      </Box>
-                      <Typography variant="caption" color="secondary" noWrap>
-                        最小探索率*
-                      </Typography>
-                      <Box sx={{ width: 200 }}>
-                        <Slider
-                          aria-label="Always visible"
-                          getAriaValueText={valuetext}
-                          step={5}
-                          value={min_exploration_rate}
-                          onChange={(e) => { setMinExplorationRate(e.target.value), setvale(5, e.target.value) }}
-                          marks={marks}
-                          valueLabelDisplay="on"
-                        />
-                      </Box>
-                    </Grid>
-                  </TabPanel>
                   <TabPanel value={value} index={0} dir={theme.direction}>
                     <ProfileTab />
                   </TabPanel>

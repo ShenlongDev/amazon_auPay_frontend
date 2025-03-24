@@ -86,6 +86,7 @@ export default function DashboardDefault() {
                   label="販売手数料率"
                   id="outlined-start-adornment"
                   sx={{ width: '100%' }}
+                  
                   slotProps={{
                     input: {
                       startAdornment: <InputAdornment position="start">%</InputAdornment>,
@@ -108,17 +109,12 @@ export default function DashboardDefault() {
         <Grid item xs={12} md={12} lg={12} >
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
-              <Typography variant="h5">商品管理 / IDで一覧表示</Typography>
+              <Typography variant="h5">設定管理 / 除外ワード設定</Typography>
               <Typography variant="caption" color="secondary" noWrap>
-                指定のIDを入力してください。<br></br>
-                複数入力する場合は改行かスペース区切りで入力してください。10000件まで入力できます。
+                除外ワード設定します。
               </Typography>
             </Grid>
-
             <Grid display={'flex'} gap={2}>
-              <Grid alignContent={'center'}>
-              入力：1 件
-              </Grid>
               <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px' }} >
                 <CloudDownloadOutlined />&nbsp;&nbsp;CSV出力
               </Button>
@@ -132,7 +128,6 @@ export default function DashboardDefault() {
             <Grid container alignItems="center" justifyContent="space-between">
 
               <Grid>
-
                 {/* <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#faad14' }} onClick={() => handleOpen()} >
                 <FunctionOutlined />&nbsp;&nbsp;手数料設定
               </Button> */}
@@ -140,23 +135,19 @@ export default function DashboardDefault() {
             </Grid>
             <Grid container justifyContent="space-between" >
               <Grid item>
-                <FormControl sx={{ width: 300 }}>
-                  <InputLabel id="demo-simple-select-label">入力ID種別</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={age}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={10}>auPay 商品コード</MenuItem>
-                    <MenuItem value={20}>auPay ロットナンバー</MenuItem>
-                    <MenuItem value={30}>アマゾンASIN</MenuItem>
-                  </Select>
-                </FormControl>
-
+                <TextField
+                  label="ワード"
+                  id="outlined-start-adornment"
+                  sx={{ width: 500, minWidth: 300 }}
+                  placeholder="ワード"
+                  slotProps={{
+                    input: {
+                      startAdornment: <InputAdornment position="start"><KeyOutlined /></InputAdornment>,
+                    },
+                  }}
+                />
                 <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
-                  表示
+                  検索
                 </Button>
               </Grid>
               <Grid item alignContent={'center'}>
@@ -186,21 +177,40 @@ export default function DashboardDefault() {
                 <Grid container justifyContent="space-between" >
 
                   <Grid item alignContent={'center'}>
-                    <Typography variant="h7"> <PlusOutlined /> ID入力 </Typography>
+                    <Typography variant="h7"> <PlusOutlined /> 検索条件 </Typography>
                   </Grid>
                 </Grid>
 
               </AccordionSummary>
               <AccordionDetails>
-                <TextField sx={{ width: '100%' }}
-                  id="outlined-multiline-static"
-                  label="ID入力"
-                  placeholder="ID入力 ID入力 ID入力"
-                  multiline
-                  rows={5}
-                  defaultValue="ID入力"
-                />
-
+                <Grid container justifyContent="space-between" mt={3}>
+                  <Grid item>
+                    <Grid container gap={1} alignItems={'center'}>
+                      <Typography variant="h7" sx={{ marginRight: '25px' }}>
+                        ワードを入力してください。1ワードは255文字までです。
+                      </Typography>
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'}>
+                      <Typography variant="h7" sx={{ marginRight: '25px' }}>
+                        複数入力する場合は改行区切りで入力してください。最大500000文字、16文字で約30000件まで入力できます。
+                      </Typography>
+                    </Grid>
+                    <Grid container gap={1} alignItems={'center'} mt={2}>
+                      <TextField sx={{ width: '100%' }}
+                        id="outlined-multiline-static"
+                        label="ASIN"
+                        placeholder=""
+                        multiline
+                        rows={5}
+                        defaultValue=""
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <br></br>
+                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
+                  <PlusOutlined />&nbsp;&nbsp;追加
+                </Button>
               </AccordionDetails>
             </Accordion>
             <Grid container justifyContent="space-between">
@@ -244,12 +254,10 @@ export default function DashboardDefault() {
                           <TableCell sx={{ backgroundColor: '#EEE' }}>
                             {/* <CheckBox></CheckBox> */}
                           </TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>商品名</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>ブランド</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>Link</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>状態</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>登録日</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>画像</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }}>ワード</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>

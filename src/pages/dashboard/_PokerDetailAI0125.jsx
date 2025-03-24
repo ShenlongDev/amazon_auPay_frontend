@@ -852,7 +852,7 @@ export default function PokerDetailAI() {
                       );
                     })}
                   </TextField>
-                  <Button size="small" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a' }} onClick={() => setSelRoundInfo_()} disabled={!validateForm()}>
+                  <Button size="small" variant="contained" sx={{ textTransform: 'capitalize',  }} onClick={() => setSelRoundInfo_()} disabled={!validateForm()}>
                     <RedoOutlined />&nbsp;ロード
                   </Button>
                 </Grid>

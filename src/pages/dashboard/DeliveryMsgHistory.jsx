@@ -14,7 +14,7 @@ import TableRow from '@mui/material/TableRow';
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 export default function DashboardDefault() {
- 
+
 
   useEffect(() => {
 
@@ -30,7 +30,7 @@ export default function DashboardDefault() {
             <Grid item>
               <Typography variant="h5">財務管理 / 発送通知履歴</Typography>
               <Typography variant="caption" color="secondary" noWrap>
-                発送通知履歴状況を表示します。
+                発送通知履歴を表示します。
               </Typography>
             </Grid>
             <Grid item />
@@ -42,20 +42,41 @@ export default function DashboardDefault() {
                 <Stack spacing={3}>
                   <Table aria-labelledby="tableTitle">
                     <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>詳細</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>受注番号</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>配送お問合せ番号</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>商品 (削除した商品は表示されません)</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>Amazon</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>価格</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>販売価格</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>状態</TableCell>
-                        <TableCell sx={{ backgroundColor: '#EEE' }}>通知日</TableCell>
+                      <TableRow >
+                        <TableCell sx={{ backgroundColor: '#EEE' }} align="center">_</TableCell>
+                        <TableCell sx={{ backgroundColor: '#EEE' }} align="center">受注番号</TableCell>
+                        <TableCell sx={{ backgroundColor: '#EEE' }} align="center">配送お問合せ番号</TableCell>
+                        <TableCell sx={{ backgroundColor: '#EEE' }} align="center">商品 (削除した商品は表示されません)</TableCell>
+                        <TableCell sx={{ backgroundColor: '#EEE' }} align="center">状態</TableCell>
+                        <TableCell sx={{ backgroundColor: '#EEE' }} align="center">通知日</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        tabIndex={-1}
+                      >
+                        <TableCell component="th" id='' scope="row">
+                          詳細
+                        </TableCell>
+                        <TableCell>
+                          723225931
+                        </TableCell>
+                        <TableCell>
+                          
+                        </TableCell>
+                        <TableCell>
+                          テントシート グランドシート 防水シート 軽量 収納バッグ付き アウトドア キャンプ 登山 ピクニックハイキング (105x210cm, グリーン)
+                        </TableCell>
+                        <TableCell>
+                          済
+                        </TableCell>
+                        <TableCell align="right">
+                          2025-03-24 15:15:34
+                        </TableCell>
+                      </TableRow>
                     </TableBody>
                   </Table>
                 </Stack>
