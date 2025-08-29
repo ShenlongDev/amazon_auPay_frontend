@@ -47,18 +47,19 @@ export default function AuthLogin({ isDemo = false }) {
 
     console.log(values); // Log the form values
 
-    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}login`, values, {
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/login`, values, {
       headers: {
         // authorization: token
       }
     })
       .then((response) => {
-        console.log(response.data.access_token);
+        console.log(response.data.token);
 
-        if(response.data.access_token){
-          localStorage.setItem("access_token", response.data.access_token);   
+        if(response.data.token){
+          localStorage.setItem("access_token", response.data.token);   
+          localStorage.setItem("user_id", response.data.user_id);   
           
-          window.location.href = "/";    
+          window.location.href = "/order";    
         }        
 
       })

@@ -8,7 +8,7 @@ export default function Footer() {
     <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', p: '24px 16px 0px', mt: 'auto' }}>
       <Typography variant="caption">
         &copy; All rights reserved{' '}
-        <Link href="#" target="_blank" underline="hover">
+        <Link href="https://www.wantedly.com/id/keita_nonaka_i" target="_blank" underline="hover">
           Nonak
         </Link>
       </Typography>

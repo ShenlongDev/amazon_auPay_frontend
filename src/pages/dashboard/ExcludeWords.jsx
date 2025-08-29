@@ -5,7 +5,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import axios from 'axios';
-import { CheckOutlined, KeyOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
+import { Pagination } from 'antd';
+import { CheckOutlined, KeyOutlined, CloudUploadOutlined, DeleteOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 // project import
 import MainCard from 'components/MainCard';
 // assets
@@ -50,60 +51,195 @@ const style = {
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 export default function DashboardDefault() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
-  useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [rows, setRows] = useState([]);
+
+  const [asin, setAsin] = useState('');
+  const [white_asin_total, setWhiteAsinTotal] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+
+  const alldel = async () => {
+    if (window.confirm("『削除』確認をお願いします。")) {
+
+
+      const requestData = {
+        user_id: localStorage.getItem("user_id"),
+        sels: selectedRows
+      };
+
+      await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/excludewordsalldel`, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+        .then(async (response) => {
+          // console.log(response.data.email);           
+          // setRows(response.data.user);
+          getData();
+        })
+        .catch((error) => {
+          if (error.status == 401 || error.status == 500) {
+            alert("ログインをお願いします。");
+            window.location.href = "./login";
+          }
+        });
 
     }
+  }
 
-  }, []);
+  const seldel = async () => {
+    if (window.confirm("『削除』確認をお願いします。")) {
 
-  const [age, setAge] = useState('');
+      if (selectedRows.length > 0) {
+        const requestData = {
+          user_id: localStorage.getItem("user_id"),
+          sels: selectedRows
+        };
 
-  const handleChange = (event) => {
-    // setAge(event.target.);
+        await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/excludewordsseldel`, requestData, {
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${localStorage.getItem("access_token")}`
+          }
+        })
+          .then(async (response) => {
+            // console.log(response.data.email);           
+            // setRows(response.data.user);
+            getData();
+          })
+          .catch((error) => {
+            if (error.status == 401 || error.status == 500) {
+              alert("ログインをお願いします。");
+              window.location.href = "./login";
+            }
+          });
+      }
+    }
+  }
+
+  const handleChangeAsin = (event) => {
+    const value = event.target.value;
+    setAsin(value);
   };
+  const handleCheckboxChange = (id) => {
+    setSelectedRows((prevSelected) => {
+      if (prevSelected.includes(id)) {
+        return prevSelected.filter((rowId) => rowId !== id);
+      } else {
+        return [...prevSelected, id];
+      }
+    });
+  };
+  const handleSelectAll = (event) => {
+    const ids = rows.map(row => row.id);
+    if (event.target.checked) {
+      setSelectedRows(ids);
+    } else {
+      setSelectedRows([]);
+    }
+  };
+
+  const getData = async (page, size) => {
+    const requestData = {
+      userId: localStorage.getItem("user_id"),
+      page: page,
+      pageSize: size,
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getexcludewords`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        setRows(response.data.whiteasin);
+        setWhiteAsinTotal(response.data.totalCount)
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+  }
+
+  const handlePageChange = (page, pageSize) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
+    getData(page, pageSize)
+  };
+
+  const del = async (id) => {
+
+    if (window.confirm("『削除』確認をお願いします。")) {
+
+      const requestData = {
+        user_id: localStorage.getItem("user_id"),
+        sel_id: id
+      };
+
+      await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/excludewordsdel`, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+        .then(async (response) => {
+          // console.log(response.data.email);           
+          // setRows(response.data.user);
+          getData();
+        })
+        .catch((error) => {
+          if (error.status == 401 || error.status == 500) {
+            alert("ログインをお願いします。");
+            window.location.href = "./login";
+          }
+        });
+    }
+
+  }
+
+  const add = async () => {
+
+    const requestData = {
+      user_id: localStorage.getItem("user_id"),
+      asin: asin
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/excludewordsadd`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        // setRows(response.data.user);
+        getData(currentPage, pageSize);
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+  }
+
+
+  useEffect(() => {
+    getData(currentPage, pageSize);
+  }, []);
 
   return (
     <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            販売手数料率
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }} gap={2}>
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item xs={12} >
-                <TextField
-                  label="販売手数料率"
-                  id="outlined-start-adornment"
-                  sx={{ width: '100%' }}
-                  
-                  slotProps={{
-                    input: {
-                      startAdornment: <InputAdornment position="start">%</InputAdornment>,
-                      type: "number",
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sx={{ textAlign: 'right' }} pt={1}>
-                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a' }} onClick={() => handleOpen()}  >
-                  <ReloadOutlined />&nbsp;&nbsp;更新
-                </Button>
-              </Grid>
-            </Grid>
-          </Typography>
-        </Box>
-      </Modal>
+
       <Grid container rowSpacing={4.5} columnSpacing={2.75} >
 
         <Grid item xs={12} md={12} lg={12} >
@@ -137,9 +273,9 @@ export default function DashboardDefault() {
               <Grid item>
                 <TextField
                   label="ワード"
+                  placeholder="ASIN"
                   id="outlined-start-adornment"
                   sx={{ width: 500, minWidth: 300 }}
-                  placeholder="ワード"
                   slotProps={{
                     input: {
                       startAdornment: <InputAdornment position="start"><KeyOutlined /></InputAdornment>,
@@ -151,20 +287,11 @@ export default function DashboardDefault() {
                 </Button>
               </Grid>
               <Grid item alignContent={'center'}>
-                <FormControl sx={{ width: 100 }}>
-                  <InputLabel id="demo-simple-select-label">表示件数</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={age}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={10}>50</MenuItem>
-                    <MenuItem value={20}>100</MenuItem>
-                    <MenuItem value={30}>250</MenuItem>
-                  </Select>
-                </FormControl>
+                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#e3342f', height: '41px' }}
+                  onClick={alldel}
+                >
+                  <DeleteOutlined />&nbsp;&nbsp;全体削除
+                </Button>
               </Grid>
             </Grid>
             <Accordion sx={{ marginTop: 1 }}>
@@ -177,14 +304,14 @@ export default function DashboardDefault() {
                 <Grid container justifyContent="space-between" >
 
                   <Grid item alignContent={'center'}>
-                    <Typography variant="h7"> <PlusOutlined /> 検索条件 </Typography>
+                    <Typography variant="h7"> <PlusOutlined /> 編集画面 </Typography>
                   </Grid>
                 </Grid>
 
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container justifyContent="space-between" mt={3}>
-                  <Grid item>
+                <Grid container justifyContent="space-between" mt={3} >
+                  <Grid item >
                     <Grid container gap={1} alignItems={'center'}>
                       <Typography variant="h7" sx={{ marginRight: '25px' }}>
                         ワードを入力してください。1ワードは255文字までです。
@@ -195,73 +322,105 @@ export default function DashboardDefault() {
                         複数入力する場合は改行区切りで入力してください。最大500000文字、16文字で約30000件まで入力できます。
                       </Typography>
                     </Grid>
-                    <Grid container gap={1} alignItems={'center'} mt={2}>
+                    <Grid container gap={1} alignItems={'center'} mt={2} >
                       <TextField sx={{ width: '100%' }}
                         id="outlined-multiline-static"
                         label="ASIN"
-                        placeholder=""
+                        placeholder="ワード ワード ワード"
+                        onChange={handleChangeAsin}
                         multiline
                         rows={5}
-                        defaultValue=""
+                        value={asin}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
                 <br></br>
-                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
+                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px' }} onClick={add}>
                   <PlusOutlined />&nbsp;&nbsp;追加
+                </Button>
+                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', backgroundColor: '#237804' }} >
+                  <CloudUploadOutlined />&nbsp;&nbsp;CSVインポート
+                </Button>
+                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', backgroundColor: '#d48806' }} >
+                  <CloudDownloadOutlined />&nbsp;&nbsp;CSVエクスポート
                 </Button>
               </AccordionDetails>
             </Accordion>
             <Grid container justifyContent="space-between">
               <Grid item sx={{ width: '100%' }}>
-                <Stack spacing={3}>
+                <Stack spacing={3} mt={2}>
+
                   <Grid container justifyContent="space-between" gap={2} alignItems="center" sx={{ marginTop: '5px !important', }}>
-
-                    <Grid container justifyContent="space-between" mt={2}>
-                      <Grid item >
-                        <Grid container >
-                          <Grid item width={150}>
-                            <FormControl fullWidth>
-                              <InputLabel id="demo-simple-select-label">アクション</InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={age}
-                                label="Age"
-                                onChange={handleChange}
-                              >
-                                <MenuItem value={10}>ホワイトASIN登録</MenuItem>
-                                <MenuItem value={20}>ホワイトASIN解除</MenuItem>
-                                <MenuItem value={30}>商品再登録</MenuItem>
-                                <MenuItem value={30} sx={{ backgroundColor: '#FF0000', color: '#FFF' }}>削除してNGに登録</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                          <Grid item width={150}>
-                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', height: '41px' }}>
-                              <CheckOutlined />&nbsp;&nbsp;確認
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-
-                    </Grid>
+                    <Pagination mt-2
+                      total={white_asin_total}
+                      showSizeChanger
+                      showQuickJumper
+                      showTotal={(total) => `合計数： ${total}`}
+                      current={currentPage}
+                      pageSize={pageSize}
+                      pageSizeOptions={[10, 50, 100, 250]}
+                      onChange={handlePageChange}
+                    />
 
                     <Table aria-labelledby="tableTitle">
                       <TableHead>
                         <TableRow>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>
-                            {/* <CheckBox></CheckBox> */}
+                            <input
+                              type="checkbox"
+                              onChange={handleSelectAll}
+                              checked={selectedRows.length === rows.length}
+                            />
                           </TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>ワード</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }}>ASIN</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">検索</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }} align="center">編集</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE', width: '150px' }} align="center">
+                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#e3342f', height: '41px' }}
+                              onClick={seldel}
+                            >
+                              <DeleteOutlined />&nbsp;&nbsp;選択削除
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
+                        {
+                          // stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                          rows.map((row, index) => {
 
+                            return (
+                              <TableRow
+                                hover
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                tabIndex={-1}
+                                key={index}
+                              >
+                                <TableCell>
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedRows.includes(row.id)}
+                                    onChange={() => handleCheckboxChange(row.id)}
+                                  />
+
+                                </TableCell>
+                                <TableCell> {row.word}</TableCell>
+                                <TableCell align="center">
+                                  <a href='#' >検索</a>
+                                </TableCell>
+                                <TableCell align="center">
+                                  <a href='#' >編集</a>
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#e3342f' }}
+                                    onClick={() => del(row.id)}>
+                                    <DeleteOutlined />&nbsp;&nbsp;削除
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                       </TableBody>
                     </Table>
 

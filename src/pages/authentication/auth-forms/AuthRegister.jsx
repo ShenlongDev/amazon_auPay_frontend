@@ -30,6 +30,7 @@ import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 
 export default function AuthRegister() {
   const [level, setLevel] = useState();
+
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -48,15 +49,21 @@ export default function AuthRegister() {
     // Example submission logic
 
     console.log(values); // Log the form values
-    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}register`, values, {  
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/register`, values, {  
       headers: {
         // authorization: token
       }
     })
       .then((response) => {
         console.log(response.data);
-        if (response.data == "successfully!") {
+        if (response.data.email == values.email) {
           alert("新規作成が完了しました。");
+          setSubmitting(false); // Stop submitting
+          localStorage.setItem("access_token", response.data.token);
+          localStorage.setItem("user_id", response.data.user_id);   
+          location.href = "./order";
+        }else{
+          alert("登録に失敗しました。");
           setSubmitting(false); // Stop submitting
         }
       })
@@ -73,15 +80,15 @@ export default function AuthRegister() {
     <>
       <Formik
         initialValues={{
-          firstname: '',
-          lastname: '',
+          first_name: '',
+          last_name: '',
           email: '',
           password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          firstname: Yup.string().max(255).required('名は必須項目です。'),
-          lastname: Yup.string().max(255).required('姓は必須項目です。'),
+          first_name: Yup.string().max(255).required('名は必須項目です。'),
+          last_name: Yup.string().max(255).required('姓は必須項目です。'),
           email: Yup.string().email('Must be a valid email').max(255).required('メールは必須項目です。'),
           password: Yup.string().max(255).required('パスワードは必須項目です。')
         })}
@@ -92,44 +99,44 @@ export default function AuthRegister() {
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="firstname-signup">名*</InputLabel>
+                  <InputLabel htmlFor="first_name-signup">名*</InputLabel>
                   <OutlinedInput
-                    id="firstname-login"
-                    type="firstname"
-                    value={values.firstname}
-                    name="firstname"
+                    id="first_name-login"
+                    type="first_name"
+                    value={values.first_name}
+                    name="first_name"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="John"
                     fullWidth
-                    error={Boolean(touched.firstname && errors.firstname)}
+                    error={Boolean(touched.first_name && errors.first_name)}
                   />
                 </Stack>
-                {touched.firstname && errors.firstname && (
-                  <FormHelperText error id="helper-text-firstname-signup">
-                    {errors.firstname}
+                {touched.first_name && errors.first_name && (
+                  <FormHelperText error id="helper-text-first_name-signup">
+                    {errors.first_name}
                   </FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="lastname-signup">姓*</InputLabel>
+                  <InputLabel htmlFor="last_name-signup">姓*</InputLabel>
                   <OutlinedInput
                     fullWidth
-                    error={Boolean(touched.lastname && errors.lastname)}
-                    id="lastname-signup"
-                    type="lastname"
-                    value={values.lastname}
-                    name="lastname"
+                    error={Boolean(touched.last_name && errors.last_name)}
+                    id="last_name-signup"
+                    type="last_name"
+                    value={values.last_name}
+                    name="last_name"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Doe"
                     inputProps={{}}
                   />
                 </Stack>
-                {touched.lastname && errors.lastname && (
-                  <FormHelperText error id="helper-text-lastname-signup">
-                    {errors.lastname}
+                {touched.last_name && errors.last_name && (
+                  <FormHelperText error id="helper-text-last_name-signup">
+                    {errors.last_name}
                   </FormHelperText>
                 )}
               </Grid>

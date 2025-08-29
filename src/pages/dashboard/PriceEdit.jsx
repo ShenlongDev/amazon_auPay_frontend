@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { CheckOutlined, InboxOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined, CloudUploadOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined, CloudUploadOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 
 // project import
@@ -26,45 +26,196 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-
-const { Dragger } = Upload;
-const props = {
-  name: 'file',
-  multiple: true,
-  height: '200px',
-  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
+import { setIn } from 'immutable';
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 export default function DashboardDefault() {
- 
-  useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
+  const [mail_add_fee, setMailAddFee] = useState(0);
+  const [delivery_add_fee, setDeliveryAddFee] = useState(0);
+  const [rows, setRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
+  const [in_price, setInPrice] = useState(0);
+  const [add_pro, setAddPro] = useState(0);
+  const [add_price, setAddPrice] = useState(0);
+
+
+  const handleSelectAll = (event) => {
+    const ids = rows.map(row => row.id);
+    if (event.target.checked) {
+      setSelectedRows(ids);
+    } else {
+      setSelectedRows([]);
     }
+  };
+  const add = async () => {
 
-  }, []);
+    const requestData = {
+      user_id: localStorage.getItem("user_id"),
+      in_price: in_price,
+      add_pro: add_pro,
+      add_price: add_price,
+    };
 
-  const [age, setAge] = useState('');
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/priceeditadd`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        // setRows(response.data.user);
+        getData();
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+  }
+  const handleCheckboxChange = (id) => {
+    setSelectedRows((prevSelected) => {
+      if (prevSelected.includes(id)) {
+        return prevSelected.filter((rowId) => rowId !== id);
+      } else {
+        return [...prevSelected, id];
+      }
+    });
+  };
+  const update = async () => {
+    const requestData = {
+      user_id: localStorage.getItem("user_id"),
+      sel_id: localStorage.getItem("sel_id"),
+      in_price: in_price,
+      add_pro: add_pro,
+      add_price: add_price,
+    };
 
-  const handleChange = (event) => {
-    // setAge(event.target.);
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/priceeditupdate`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        // setRows(response.data.user);
+        getData();
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          // window.location.href = "./login";
+        }
+      });
+  }
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!in_price) {
+      newErrors.name = '試合名は必須です。';
+    }
+    return Object.keys(newErrors).length === 0;
+
   };
 
+  const getData = async () => {
+    const requestData = {
+      userId: localStorage.getItem("user_id")
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getpriceedit`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        // setRows(response.data.user);
+        setRows(response.data.editprice)
+        setDeliveryAddFee(response.data.userinfo[0].delivery_add_fee);
+        setMailAddFee(response.data.userinfo[0].mail_add_fee);
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+  }
+
+  const seldel = async () => {
+    if (window.confirm("『削除』確認をお願いします。")) {
+
+
+      const requestData = {
+        user_id: localStorage.getItem("user_id"),
+        sels: selectedRows
+      };
+
+      await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/priceeditseldel`, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+        .then(async (response) => {
+          // console.log(response.data.email);           
+          // setRows(response.data.user);
+          getData();
+        })
+        .catch((error) => {
+          if (error.status == 401 || error.status == 500) {
+            alert("ログインをお願いします。");
+            window.location.href = "./login";
+          }
+        });
+
+    }
+  }
+  const del = async (id) => {
+
+    if (window.confirm("『削除』確認をお願いします。")) {
+
+      const requestData = {
+        user_id: localStorage.getItem("user_id"),
+        sel_id: id
+      };
+
+      await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/priceeditdel`, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+        .then(async (response) => {
+          // console.log(response.data.email);           
+          // setRows(response.data.user);
+          getData();
+        })
+        .catch((error) => {
+          if (error.status == 401 || error.status == 500) {
+            alert("ログインをお願いします。");
+            window.location.href = "./login";
+          }
+        });
+    }
+
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const editRow = async (row) => {
+    setInPrice(row.in_price || 0);
+    setAddPro(row.add_pro || 0);
+    setAddPrice(row.add_price || 0);
+    localStorage.setItem("sel_id", row.id)
+  }
 
   return (
     <>
@@ -82,7 +233,7 @@ export default function DashboardDefault() {
 
             <Grid display={'flex'} gap={2}>
               <Grid alignContent={'center'}>
-                宅配便追加上乗せ固定値 :  0 円 | メール便追加上乗せ固定値： 0 円
+                宅配便追加上乗せ固定値 : {delivery_add_fee} 円 | メール便追加上乗せ固定値： {mail_add_fee} 円
               </Grid>
               <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px' }} >
                 <CloudDownloadOutlined />&nbsp;&nbsp;CSV出力
@@ -120,21 +271,7 @@ export default function DashboardDefault() {
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container justifyContent="space-between" mt={3}>
-                  <Grid item>
-                    <Dragger {...props} >
-                      <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                      </p>
-                      <p className="ant-upload-text">ファイルをクリックまたはドラッグします。</p>
-                      <p className="ant-upload-hint">
-                        価格設定を指定のファイルで置き換えます。<br />現在の設定は全て消去されます。
-                      </p>
-                    </Dragger>
-                    <br></br>
-                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
-                      <CloudUploadOutlined />&nbsp;&nbsp;インポート
-                    </Button>
-                  </Grid>
+
                   <Grid item>
                     <Grid container gap={1} alignItems={'center'}>
                       <Typography variant="h7" sx={{ marginRight: '25px', width: '100px' }}> 仕入価格</Typography>
@@ -142,6 +279,8 @@ export default function DashboardDefault() {
                         label="仕入価格"
                         id="outlined-start-adornment"
                         sx={{ width: '250px' }}
+                        value={in_price}
+                        onChange={(event) => setInPrice(event.target.value)}
                         slotProps={{
                           input: {
                             startAdornment: <InputAdornment position="end">円以上</InputAdornment>,
@@ -156,6 +295,9 @@ export default function DashboardDefault() {
                         label="上乗せ比率"
                         id="outlined-start-adornment"
                         sx={{ width: '250px' }}
+                        value={add_pro}
+                        onChange={(event) => setAddPro(event.target.value)}
+
                         slotProps={{
                           input: {
                             startAdornment: <InputAdornment position="end">%</InputAdornment>,
@@ -170,6 +312,8 @@ export default function DashboardDefault() {
                         label="上乗せ固定値"
                         id="outlined-start-adornment"
                         sx={{ width: '250px' }}
+                        value={add_price}
+                        onChange={(event) => setAddPrice(event.target.value)}
                         slotProps={{
                           input: {
                             startAdornment: <InputAdornment position="end">円</InputAdornment>,
@@ -179,9 +323,19 @@ export default function DashboardDefault() {
                       />
                     </Grid>
                     <br></br>
-                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
+                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px' }}
+                      disabled={!validateForm()} onClick={add}>
                       <PlusOutlined />&nbsp;&nbsp;追加
                     </Button>
+                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', marginRight: '3px' }} disabled={!validateForm()}
+                      onClick={update}>
+                      <ReloadOutlined />&nbsp;&nbsp;修正
+                    </Button>
+                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', backgroundColor: '#d48806' }} >
+                      <CloudUploadOutlined />&nbsp;&nbsp;CSVインポート
+                    </Button>
+                    <br></br>
+                    価格設定を指定のファイルで置き換えます。現在の設定は全て消去されます。
                   </Grid>
                   <Grid item mt={2}>
                     <Grid container gap={1} alignItems={'center'}>
@@ -190,6 +344,8 @@ export default function DashboardDefault() {
                         label="宅配便追加上乗せ固定値"
                         id="outlined-start-adornment"
                         sx={{ width: '250px' }}
+                        value={delivery_add_fee}
+                        onChange={(event) => setMailAddFee(event.target.value)}
                         slotProps={{
                           input: {
                             startAdornment: <InputAdornment position="end">円</InputAdornment>,
@@ -204,6 +360,8 @@ export default function DashboardDefault() {
                         label="メール便追加上乗せ固定値"
                         id="outlined-start-adornment"
                         sx={{ width: '250px' }}
+                        value={mail_add_fee}
+                        onChange={(event) => setDeliveryAddFee(event.target.value)}
                         slotProps={{
                           input: {
                             startAdornment: <InputAdornment position="end">円</InputAdornment>,
@@ -211,9 +369,9 @@ export default function DashboardDefault() {
                           },
                         }}
                       />
-                    </Grid>                    
+                    </Grid>
                     <br></br>
-                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px', backgroundColor: '#52c41a' }} >
+                    <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', backgroundColor: '#237804' }} >
                       <ReloadOutlined />&nbsp;&nbsp;更新
                     </Button>
                   </Grid>
@@ -227,51 +385,63 @@ export default function DashboardDefault() {
                 <Stack spacing={3}>
                   <Grid container justifyContent="space-between" gap={2} alignItems="center" sx={{ marginTop: '5px !important', }}>
 
-                    <Grid container justifyContent="space-between" mt={2}>
-                      <Grid item >
-                        <Grid container >
-                          <Grid item width={150}>
-                            <FormControl fullWidth>
-                              <InputLabel id="demo-simple-select-label">アクション</InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={age}
-                                label="Age"
-                                onChange={handleChange}
-                              >
-                                <MenuItem value={10}>ホワイトASIN登録</MenuItem>
-                                <MenuItem value={20}>ホワイトASIN解除</MenuItem>
-                                <MenuItem value={30}>商品再登録</MenuItem>
-                                <MenuItem value={30} sx={{ backgroundColor: '#FF0000', color: '#FFF' }}>削除してNGに登録</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                          <Grid item width={150}>
-                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', height: '41px' }}>
-                              <CheckOutlined />&nbsp;&nbsp;確認
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-
-                    </Grid>
-
                     <Table aria-labelledby="tableTitle">
                       <TableHead>
                         <TableRow>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>
-                            {/* <CheckBox></CheckBox> */}
+                            <input
+                              type="checkbox"
+                              onChange={handleSelectAll}
+                              checked={selectedRows.length === rows.length}
+                            />
                           </TableCell>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>仕入価格(円)</TableCell>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>上乗せ比率(%)</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>上乗せ固定値(円)</TableCell>        
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>_</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>_</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE' }}>上乗せ固定値(円)</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE', width: '100px' }} align="center">編集</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE', width: '150px' }} align="center">
+                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#e3342f', }}
+                              onClick={seldel}
+                            >
+                              <DeleteOutlined />&nbsp;&nbsp;選択削除
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
+                        {
+                          // stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                          rows.map((row, index) => {
+                            return (
+                              <TableRow
+                                hover
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                tabIndex={-1}
+                                key={index}
+                              >
+                                <TableCell>
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedRows.includes(row.id)}
+                                    onChange={() => handleCheckboxChange(row.id)}
+                                  />
 
+                                </TableCell>
+                                <TableCell> {row.in_price}</TableCell>
+                                <TableCell> {row.add_pro}</TableCell>
+                                <TableCell>{row.add_price} </TableCell>
+                                <TableCell align="center">
+                                  <a href='#' onClick={() => editRow(row)}>編集</a>
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#e3342f' }}
+                                    onClick={() => del(row.id)}>
+                                    <DeleteOutlined />&nbsp;&nbsp;削除
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                       </TableBody>
                     </Table>
 

@@ -3,9 +3,8 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import axios from 'axios';
-import { CheckOutlined, KeyOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, KeyOutlined, CloudDownloadOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 // project import
 import MainCard from 'components/MainCard';
 // assets
@@ -15,8 +14,6 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Accordion from '@mui/material/Accordion';
@@ -27,13 +24,6 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { width } from '@mui/system';
 
 const style = {
   position: 'absolute',
@@ -50,15 +40,48 @@ const style = {
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 export default function DashboardDefault() {
+
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
-
+  const handleSelectAll = (event) => {
+    const ids = rows.map(row => row.id);
+    if (event.target.checked) {
+      setSelectedRows(ids);
+    } else {
+      setSelectedRows([]);
     }
+  };
 
+  const getData = async () => {
+    const requestData = {
+      userId: localStorage.getItem("user_id")
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getbuyer`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        setRows(response.data.user);
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+  }
+
+
+  useEffect(() => {
+    getData();
   }, []);
 
   const [age, setAge] = useState('');
@@ -67,42 +90,176 @@ export default function DashboardDefault() {
     // setAge(event.target.);
   };
 
+
+  const handleCheckboxChange = (id) => {
+    setSelectedRows((prevSelected) => {
+      if (prevSelected.includes(id)) {
+        return prevSelected.filter((rowId) => rowId !== id);
+      } else {
+        return [...prevSelected, id];
+      }
+    });
+  };
+
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!name) {
+      newErrors.name = '試合名は必須です。';
+    }
+    return Object.keys(newErrors).length === 0;
+
+  };
+  const [isValid, setIsValid] = useState(true);
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+  const handleChangeEmail = (event) => {
+    const value = event.target.value;
+    setEmail(value);
+    setIsValid(validateEmail(value));
+  };
+
+  const [isValidPhone, setIsValidPhone] = useState(true);
+  const validatePhone = (phone) => {
+    const regex = /^(0\d{1,2}-\d{3,4}-\d{4}|\d{10,11})$/;
+    return regex.test(phone);
+  };
+  const handleChangePhone = (event) => {
+    const value = event.target.value;
+    setPhone(value);
+    setIsValidPhone(validatePhone(value));
+  };
+
+  const update = async () => {
+    const requestData = {
+      user_id: localStorage.getItem("user_id"),
+      sel_id: localStorage.getItem("sel_id"),
+      name: name,
+      phone: phone,
+      address: address,
+      email: email
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getbuyerupdate`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        // setRows(response.data.user);
+        getData();
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          // window.location.href = "./login";
+        }
+      });
+  }
+  const add = async () => {
+    const requestData = {
+      user_id: localStorage.getItem("user_id"),
+      name: name,
+      phone: phone,
+      address: address,
+      email: email
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getbuyeradd`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);           
+        // setRows(response.data.user);
+        getData();
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+  }
+  const editRow = async (row) => {
+    setName(row.name);
+    setAddress(row.address);
+    setPhone(row.phone);
+    setEmail(row.email);
+    localStorage.setItem("sel_id", row.id)
+  }
+  const alldel = async () => {
+    if (window.confirm("『削除』確認をお願いします。")) {
+
+
+      const requestData = {
+        user_id: localStorage.getItem("user_id"),
+        sels: selectedRows
+      };
+
+      await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getbuyerall`, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+        .then(async (response) => {
+          // console.log(response.data.email);           
+          // setRows(response.data.user);
+          getData();
+        })
+        .catch((error) => {
+          if (error.status == 401 || error.status == 500) {
+            alert("ログインをお願いします。");
+            window.location.href = "./login";
+          }
+        });
+
+    }
+  }
+  const del = async (id) => {
+
+    if (window.confirm("『削除』確認をお願いします。")) {
+
+      const requestData = {
+        user_id: localStorage.getItem("user_id"),
+        sel_id: id
+      };
+
+      await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getbuyerdel`, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+        .then(async (response) => {
+          // console.log(response.data.email);           
+          // setRows(response.data.user);
+          getData();
+        })
+        .catch((error) => {
+          if (error.status == 401 || error.status == 500) {
+            alert("ログインをお願いします。");
+            window.location.href = "./login";
+          }
+        });
+    }
+
+  }
+
   return (
     <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            販売手数料率
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }} gap={2}>
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item xs={12} >
-                <TextField
-                  label="販売手数料率"
-                  id="outlined-start-adornment"
-                  sx={{ width: '100%' }}
-                  slotProps={{
-                    input: {
-                      startAdornment: <InputAdornment position="start">%</InputAdornment>,
-                      type: "number",
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sx={{ textAlign: 'right' }} pt={1}>
-                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a' }} onClick={() => handleOpen()}  >
-                  <ReloadOutlined />&nbsp;&nbsp;更新
-                </Button>
-              </Grid>
-            </Grid>
-          </Typography>
-        </Box>
-      </Modal>
       <Grid container rowSpacing={4.5} columnSpacing={2.75} >
 
         <Grid item xs={12} md={12} lg={12} >
@@ -176,7 +333,7 @@ export default function DashboardDefault() {
                 <Grid container justifyContent="space-between" >
 
                   <Grid item alignContent={'center'}>
-                    <Typography variant="h7"> <PlusOutlined /> 検索条件 </Typography>
+                    <Typography variant="h7"> <PlusOutlined /> 編集画面 </Typography>
                   </Grid>
                 </Grid>
 
@@ -188,14 +345,10 @@ export default function DashboardDefault() {
                       <Typography variant="h7" sx={{ marginRight: '25px', width: '100px' }}> 氏名</Typography>
                       <TextField
                         label="氏名"
+                        value={name}
                         id="outlined-start-adornment"
+                        onChange={(event) => setName(event.target.value)}
                         sx={{ width: '250px' }}
-                        slotProps={{
-                          input: {
-                            startAdornment: <InputAdornment position="end"></InputAdornment>,
-                            type: "number",
-                          },
-                        }}
                       />
                     </Grid>
                     <Grid container gap={1} alignItems={'center'} mt={2}>
@@ -203,13 +356,9 @@ export default function DashboardDefault() {
                       <TextField
                         label="住所"
                         id="outlined-start-adornment"
+                        value={address}
+                        onChange={(event) => setAddress(event.target.value)}
                         sx={{ width: '250px' }}
-                        slotProps={{
-                          input: {
-                            startAdornment: <InputAdornment position="end"></InputAdornment>,
-                            type: "number",
-                          },
-                        }}
                       />
                     </Grid>
                     <Grid container gap={1} alignItems={'center'} mt={2}>
@@ -218,34 +367,39 @@ export default function DashboardDefault() {
                         label="電話番号"
                         id="outlined-start-adornment"
                         sx={{ width: '250px' }}
-                        slotProps={{
-                          input: {
-                            startAdornment: <InputAdornment position="end"></InputAdornment>,
-                            type: "number",
-                          },
-                        }}
+                        onChange={handleChangePhone}
+                        value={phone}
+                        error={!isValidPhone}
+                        helperText={!isValidPhone ? '無効な電話番号です' : ''}
                       />
-                    </Grid> 
+                    </Grid>
                     <Grid container gap={1} alignItems={'center'} mt={2}>
                       <Typography variant="h7" sx={{ marginRight: '25px', width: '100px' }}> メールアドレス</Typography>
                       <TextField
                         label="メールアドレス"
                         id="outlined-start-adornment"
+                        value={email}
+                        onChange={handleChangeEmail}
+                        error={!isValid}
                         sx={{ width: '250px' }}
-                        slotProps={{
-                          input: {
-                            startAdornment: <InputAdornment position="end"></InputAdornment>,
-                            type: "number",
-                          },
-                        }}
+                        helperText={!isValid ? '無効なメールアドレスです' : ''}
                       />
-                    </Grid>                   
+                    </Grid>
                   </Grid>
                 </Grid>
                 <br></br>
-                <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px', height: '41px' }} >
-                  <PlusOutlined />&nbsp;&nbsp;追加
-                </Button>
+
+                <Grid container>
+                  <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', marginRight: '3px' }}
+                    disabled={!validateForm()} onClick={add}>
+                    <PlusOutlined />&nbsp;&nbsp;追加
+                  </Button>
+                  <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a' }} disabled={!validateForm()}
+                    onClick={update}>
+                    <ReloadOutlined />&nbsp;&nbsp;修正
+                  </Button>
+                </Grid>
+
               </AccordionDetails>
             </Accordion>
             <Grid container justifyContent="space-between">
@@ -253,52 +407,66 @@ export default function DashboardDefault() {
                 <Stack spacing={3}>
                   <Grid container justifyContent="space-between" gap={2} alignItems="center" sx={{ marginTop: '5px !important', }}>
 
-                    <Grid container justifyContent="space-between" mt={2}>
-                      <Grid item >
-                        <Grid container >
-                          <Grid item width={150}>
-                            <FormControl fullWidth>
-                              <InputLabel id="demo-simple-select-label">アクション</InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={age}
-                                label="Age"
-                                onChange={handleChange}
-                              >
-                                <MenuItem value={10}>ホワイトASIN登録</MenuItem>
-                                <MenuItem value={20}>ホワイトASIN解除</MenuItem>
-                                <MenuItem value={30}>商品再登録</MenuItem>
-                                <MenuItem value={30} sx={{ backgroundColor: '#FF0000', color: '#FFF' }}>削除してNGに登録</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                          <Grid item width={150}>
-                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', height: '41px' }}>
-                              <CheckOutlined />&nbsp;&nbsp;確認
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-
-                    </Grid>
-
                     <Table aria-labelledby="tableTitle">
                       <TableHead>
                         <TableRow>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>
-                            {/* <CheckBox></CheckBox> */}
+                            <input
+                              type="checkbox"
+                              onChange={handleSelectAll}
+                              checked={selectedRows.length === rows.length}
+                            />
                           </TableCell>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>氏名</TableCell>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>住所</TableCell>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>電話番号</TableCell>
                           <TableCell sx={{ backgroundColor: '#EEE' }}>メールアドレス</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
-                          <TableCell sx={{ backgroundColor: '#EEE' }}>-</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE', width: '100px' }} align="center">編集</TableCell>
+                          <TableCell sx={{ backgroundColor: '#EEE', width: '150px' }} align="center">
+                            <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#e3342f', height: '41px' }}
+                              onClick={alldel}
+                            >
+                              <DeleteOutlined />&nbsp;&nbsp;選択削除
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
+                        {
+                          // stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                          rows.map((row, index) => {
 
+                            return (
+                              <TableRow
+                                hover
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                tabIndex={-1}
+                                key={index}
+                              >
+                                <TableCell>
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedRows.includes(row.id)}
+                                    onChange={() => handleCheckboxChange(row.id)}
+                                  />
+
+                                </TableCell>
+                                <TableCell> {row.name}</TableCell>
+                                <TableCell> {row.address}</TableCell>
+                                <TableCell>{row.phone} </TableCell>
+                                <TableCell>{row.email} </TableCell>
+                                <TableCell align="center">
+                                  <a href='#' onClick={() => editRow(row)}>編集</a>
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#e3342f' }}
+                                    onClick={() => del(row.id)}>
+                                    <DeleteOutlined />&nbsp;&nbsp;削除
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                       </TableBody>
                     </Table>
 

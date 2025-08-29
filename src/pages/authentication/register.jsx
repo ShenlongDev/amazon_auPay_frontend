@@ -1,11 +1,13 @@
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-// material-ui
+import { useDispatch } from 'react-redux';
+// Material-UI
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import ReactLoading from 'react-loading'; // Ensure you have this imported
 
-// project import
+// Project import
 import AuthWrapper from './AuthWrapper';
 import AuthRegister from './auth-forms/AuthRegister';
 
@@ -13,6 +15,7 @@ import AuthRegister from './auth-forms/AuthRegister';
 
 export default function Register() {
   return (
+
     <AuthWrapper>
       <Grid container spacing={3}>
         <Grid item xs={12}>
@@ -28,5 +31,6 @@ export default function Register() {
         </Grid>
       </Grid>
     </AuthWrapper>
+
   );
 }

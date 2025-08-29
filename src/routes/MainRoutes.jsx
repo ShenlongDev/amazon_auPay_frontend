@@ -9,12 +9,6 @@ const Typography = Loadable(lazy(() => import('pages/component-overview/typograp
 const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 
-const PokerDetail = Loadable(lazy(() => import('pages/dashboard/PokerDetail')));
-const PokerDetailAI = Loadable(lazy(() => import('pages/dashboard/PokerDetailAI')));
-const PokerHistory = Loadable(lazy(() => import('pages/dashboard/PokerHistory')));
-const PokerAIChart = Loadable(lazy(() => import('pages/dashboard/PokerAIChart')));
-const IndexEdit = Loadable(lazy(() => import('pages/dashboard/IndexEdit')));
-const Self = Loadable(lazy(() => import('pages/dashboard/Self')));
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 
@@ -38,10 +32,10 @@ const MainRoutes = {
   path: '/',
   element: <Dashboard />,
   children: [
-    {
-      path: '/',
-      element: <Order />
-    },
+    // {
+    //   path: '/',
+    //   element: <Order />
+    // },
     {
       path: '/order',
       element: <Order />
@@ -68,15 +62,15 @@ const MainRoutes = {
       element: <ItemAsinDel />
     },
     {
-      path: 'profit',
+      path: '/profit',
       element: <Profit />
     },
     {
-      path: 'price_edit',
+      path: '/price_edit',
       element: <PriceEdit />
     },
     {
-      path: 'exclude_words',
+      path: '/exclude_words',
       element: <ExcludeWords />
     },
     {
@@ -84,53 +78,26 @@ const MainRoutes = {
       element: <WhiteASINSet />
     },
     {
-      path: 'black_buyer_set',
+      path: '/black_buyer_set',
       element: <BlackBuyerSet />
     },
     {
-      path: 'img_set',
+      path: '/img_set',
       element: <ImgSet />
     },
     {
-      path: 'account',
+      path: '/account',
       element: <Account />
     },
     {
-      path: 'reset_password',
+      path: '/reset_password',
       element: <ResetPassword />
     },
 
-
-    {
-      path: 'edit',
-      element: <IndexEdit />
-    }, 
-
-
-    {
-      path: 'self',
-      element: <Self />
-    },
     {
       path: 'default',
       element: <DashboardDefault />
     },    
-    {
-      path: 'poker-detail',
-      element: <PokerDetail />
-    },
-    {
-      path: 'poker-detail-ai',
-      element: <PokerDetailAI />
-    },
-    {
-      path: 'poker-history',
-      element: <PokerHistory/>
-    },
-    {
-      path: 'poker-ai-chart',
-      element: <PokerAIChart/>
-    },
     {
       path: 'sample-page',
       element: <SamplePage />

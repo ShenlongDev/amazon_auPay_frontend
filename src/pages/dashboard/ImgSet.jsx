@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -10,31 +10,14 @@ import MainCard from 'components/MainCard';
 import { useEffect } from "react";
 import { message, Upload } from 'antd';
 import { Image } from 'antd';
+import axios from 'axios';
 import { Input, Radio } from 'antd';
 import { Space, Switch } from 'antd';
 
+const server = "http://localhost:5050/";
+
 const { Dragger } = Upload;
-const props = {
-  name: 'file',
-  multiple: true,
-  height: '200px',
-  width: '300px',
-  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
+
 const style = {
   display: 'flex',
   flexDirection: 'column',
@@ -43,18 +26,131 @@ const style = {
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 export default function DashboardDefault() {
+  const props = {
+    name: 'file',
+    multiple: true,
+    height: '200px',
+    width: '300px',
+    action: `${import.meta.env.VITE_PUBLIC_URL}users/imguload`,
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem("access_token")}`
+    },
+    async onChange(info) {
+      const { status } = info.file;
+     
+      if (status === 'done') {
+        const responseFiles = info.fileList[info.fileList.length - 1].response?.files[0]?.filename;      
+  
+        if (responseFiles) {
+          try {
+            const img_url = `${server}uploads/${responseFiles}`;          
+            setImgInitUrl(img_url);     
+            localStorage.setItem("img_init_url", responseFiles)        
+          } catch (error) {
+            
+          }
+        } else {
+         
+        }
+  
+      } else if (status === 'error') {
+       
+      }
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+
+  const [img_init_url, setImgInitUrl] = useState(`${server}uploads/default.png`);
+  const [img_init_config, setImgInitConfig] = useState(1);
+  const [img_init_agree, setImgInitAgree] = useState(0);
+
+  const onChange = (e) => {
+    setImgInitConfig(e.target.value);
+  };
+  
+  const onChangeAgree = (checked) => {
+    setImgInitAgree(checked ? 1 : 0); // Update state based on switch
+  };
+
+  const checkImageExists = async (imgUrl) => {
+    try {
+      const response = await axios.get(imgUrl);
+      return response.status === 200;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const save =  async () =>{
+    const requestData = {
+      img_init_agree: img_init_agree,
+      img_init_config: img_init_config,
+      img_init_url: localStorage.getItem("img_init_url") 
+    };
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/imgInitSave`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);       
+
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+
+  }
+
+  const getData = async () => {
+    const requestData = {
+      userId: '1'
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}users/getinfo`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        // console.log(response.data.email);   
+        const imgUrl = `${server}uploads/${response.data.user.img_init_url}`;
+        const exists = await checkImageExists(imgUrl);
+        if (exists) {
+          setImgInitUrl(imgUrl);
+          localStorage.setItem("img_init_url", response.data.user.img_init_url)
+        }else{
+          localStorage.setItem("img_init_url", "default.png")
+        }
+
+        if(response.data.user.img_init_agree == 1){          
+          setImgInitAgree(1);
+        }
+       
+
+        if(response.data.user.img_init_config){
+          setImgInitConfig(response.data.user.img_init_config);
+        }
+
+      })
+      .catch((error) => {
+        if (error.status == 401 || error.status == 500) {
+          alert("ログインをお願いします。");
+          window.location.href = "./login";
+        }
+      });
+  }
 
   useEffect(() => {
-    if (!localStorage.getItem("access_token")) {
-
-    }
-
+    getData();
   }, []);
-
-  const [value, setValue] = useState(1);
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
 
   return (
     <>
@@ -78,7 +174,7 @@ export default function DashboardDefault() {
               <Grid item sx={{ width: '100%' }}>
                 <Stack spacing={3}>
                   <Grid item>
-                    <Switch checkedChildren="有効" unCheckedChildren="無効" defaultChecked /><br></br>
+                    <Switch checkedChildren="有効" unCheckedChildren="無効" checked={img_init_agree === 1} onChange={onChangeAgree}/><br></br>
                   </Grid>
                   <Grid item>
                     <Typography variant="h7" sx={{ marginRight: '25px' }}>
@@ -89,7 +185,7 @@ export default function DashboardDefault() {
                   <Grid item>
                     <Image
                       width={200}
-                      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                      src={img_init_url}
                     />
                   </Grid>
                   <Grid item>
@@ -111,7 +207,7 @@ export default function DashboardDefault() {
                       <Radio.Group
                         style={style}
                         onChange={onChange}
-                        value={value}
+                        value={img_init_config}
                         options={[
                           { value: 1, label: '装飾画像を商品画像の縦横比に合わせて変形する' },
                           { value: 2, label: '装飾画像の縦横比に合わせて商品画像の上下または左右を切り取る' },
@@ -122,15 +218,13 @@ export default function DashboardDefault() {
                   </Grid>
                   <Grid item >
                     <Grid item width={150}>
-                      <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', height: '41px' }}>
+                      <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', height: '41px' }} onClick={save}>
                         <ReloadOutlined />&nbsp;&nbsp;変更する
                       </Button>
                     </Grid>
                   </Grid>
-
                 </Stack>
               </Grid>
-
             </Grid>
           </MainCard>
         </Grid>

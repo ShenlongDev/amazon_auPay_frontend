@@ -4,12 +4,12 @@ import { LoginOutlined, FontColorsOutlined, DeleteRowOutlined, AppstoreAddOutlin
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
 const pages = {
-  id: '111',
+  id: 'group-pages',
   title: '商品管理',
   type: 'group',
   children: [
     {
-      id: 'login1',
+      id: 'item_list',
       title: '商品一覧',
       type: 'item',
       url: '/item_list',
@@ -18,7 +18,7 @@ const pages = {
       breadcrumbs: false
     },
     {
-      id: 'login1',
+      id: 'item_edit',
       title: '商品登録',
       type: 'item',
       url: '/item_edit',
@@ -27,7 +27,7 @@ const pages = {
     },
     
     {
-      id: 'login1',
+      id: 'item_to_view',
       title: 'IDで一覧表示',
       type: 'item',
       url: '/item_to_view',
@@ -35,7 +35,7 @@ const pages = {
       breadcrumbs: false
     },
     {
-      id: 'login1',
+      id: 'item_asin_del',
       title: 'ASINで削除',
       type: 'item',
       url: '/item_asin_del',

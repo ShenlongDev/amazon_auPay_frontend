@@ -17,12 +17,12 @@ import {
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
 
 const utilities = {
-  id: 'utilities',
+  id: 'group-utilities',
   title: '設定管理',
   type: 'group',
   children: [
     {
-      id: 'util-typography',
+      id: 'price_edit',
       title: '価格設定',
       type: 'item',
       url: '/price_edit',
@@ -30,7 +30,7 @@ const utilities = {
       breadcrumbs: false
     },
     {
-      id: 'util-color',
+      id: 'exclude_words',
       title: '除外ワード設定',
       type: 'item',
       url: '/exclude_words',
@@ -38,7 +38,7 @@ const utilities = {
       breadcrumbs: false
     },
     {
-      id: 'util-shadow',
+      id: 'white_asin_set',
       title: 'ホワイトASIN設定',
       type: 'item',
       url: '/white_asin_set',
@@ -47,7 +47,7 @@ const utilities = {
     }
     ,
     {
-      id: 'util-shadow',
+      id: 'black_buyer_set',
       title: 'ブラック購入者設定',
       type: 'item',
       url: '/black_buyer_set',
@@ -55,7 +55,7 @@ const utilities = {
       breadcrumbs: false
     },
     {
-      id: 'util-shadow',
+      id: 'Img_set',
       title: '装飾画像設定',
       type: 'item',
       url: '/Img_set',

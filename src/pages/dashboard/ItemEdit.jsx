@@ -15,10 +15,11 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import axios from 'axios';
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 export default function DashboardDefault() {
-
+  const [asin, setAsin] = useState();
   useEffect(() => {
     if (!localStorage.getItem("access_token")) {
 
@@ -26,6 +27,26 @@ export default function DashboardDefault() {
 
   }, []);
 
+  const add = async () => {
+
+    const requestData = {
+      userId: localStorage.getItem("user_id"),   
+      asin_list: asin
+    };
+
+    await axios.post(`${import.meta.env.VITE_PUBLIC_URL}spapi/additemFromAsin`, requestData, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem("access_token")}`
+      }
+    })
+      .then(async (response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        alert("Error");
+      });
+  }
 
   return (
     <>
@@ -62,13 +83,16 @@ export default function DashboardDefault() {
                       placeholder="ASIN ASIN ASIN"
                       multiline
                       rows={5}
+                      value={asin}
+                      onChange={(event)=>setAsin(event.target.value)}
                       defaultValue="ASIN"
                     />
 
                   </Grid>
                   <Grid item >
                     <Grid item width={150}>
-                      <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', height: '41px' }}>
+                      <Button size="big" variant="contained" sx={{ textTransform: 'capitalize', backgroundColor: '#52c41a', height: '41px' }}
+                        onClick={add}>
                         <PlusOutlined />&nbsp;&nbsp;登録
                       </Button>
                     </Grid>
